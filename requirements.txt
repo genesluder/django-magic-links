@@ -1,0 +1,2 @@
+bcrypt==3.1.4
+django-rest-framework==3.8.2
