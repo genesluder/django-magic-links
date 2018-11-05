@@ -4,13 +4,15 @@ setup(
   packages = [
     'magic_links',
     'magic_links/migrations',
+    'magic_links/urls',
+    'magic_links/views',
   ],
-  version = '0.0.1',
+  version = '0.0.3',
   description = '',
   author = 'Gene Sluder',
   author_email = 'gene@gobiko.com',
   url = 'https://github.com/genesluder/django-magic-links',
-  download_url = 'https://github.com/genesluder/django-magic-links/tarball/0.0.1',
+  download_url = 'https://github.com/genesluder/django-magic-links/tarball/0.0.3',
   keywords = [
   ],
   classifiers = [],

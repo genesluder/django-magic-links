@@ -1,4 +1,5 @@
 import bcrypt
+from urllib.parse import urlencode, urlparse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from rest_framework.authtoken.models import Token
@@ -25,21 +26,36 @@ def check_credential_expiry(credential):
     return False
 
 
+def get_url_for_source(source):
+    return api_settings.MAGIC_LINKS_URLS.get(source)
+
+
+def get_redirect_url(source, query_params):
+    base_url = get_url_for_source(source)
+    url = '{}?{}'.format(base_url, urlencode(query_params))
+    return url
+
+
 def get_magic_link(user, source):
+
+    # check for existing key
+    credential, created = MagicLinkCredential.objects.get_or_create(user=user, is_active=True)
+
+    if not created:
+        if not check_credential_expiry(credential):
+            credential = MagicLinkCredential.objects.create(user=user)
+
+    token = get_hashed_key(str(credential.key))
+
+    payload = {
+        'email': credential.user.email, 
+        'token': token,
+        'source': source
+    }
+
     # TODO: Error if source not specified
-    url = api_settings.MAGIC_LINKS_URLS.get(source)
-
-    if url and '{key}' in url:
-        # check for existing key
-        credential, created = MagicLinkCredential.objects.get_or_create(user=user, is_active=True)
-
-        if not created:
-            if not check_credential_expiry(credential):
-                credential = MagicLinkCredential.objects.create(user=user)
-
-        hashed_key = get_hashed_key(str(credential.key))
-
-        url = url.format(key=hashed_key)
+    base_url = get_url_for_source(source)
+    url = '{}?{}'.format(base_url, payload)
 
     return url
 

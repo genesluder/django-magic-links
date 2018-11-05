@@ -7,7 +7,7 @@ USER_SETTINGS = getattr(settings, 'MAGIC_LINKS', None)
 DEFAULTS = {
     # URLS for creating links, dict key corresponds to `source` when requesting link
     'MAGIC_LINKS_URLS': {
-        'default': 'myapp://login/{key}'
+        'default': 'myapp://login/'
     },
 
     # Amount of time that tokens last, in seconds
