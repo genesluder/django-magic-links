@@ -36,7 +36,7 @@ class RequestMagicLink(APIView):
         if serializer.is_valid():
 
             email = serializer.validated_data['email']
-            source = serializer.validated_data['source']
+            request_source = serializer.validated_data['source']
 
             user = get_user_for_email(email)
 
@@ -44,7 +44,7 @@ class RequestMagicLink(APIView):
                 if not user.is_active:
                     return Response({ 'detail': MESSAGE_USER_INACTIVE }, status=status.HTTP_400_BAD_REQUEST)
 
-                success = send_magic_link(user, source)
+                success = send_magic_link(user, request_source)
 
                 if success:
                     status_code = status.HTTP_200_OK

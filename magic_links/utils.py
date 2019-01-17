@@ -26,17 +26,17 @@ def check_credential_expiry(credential):
     return False
 
 
-def get_url_for_source(source):
-    return api_settings.MAGIC_LINKS_URLS.get(source)
+def get_url_for_source(request_source):
+    return api_settings.MAGIC_LINKS_URLS.get(request_source)
 
 
-def get_redirect_url(source, query_params):
-    base_url = get_url_for_source(source)
+def get_redirect_url(request_source, query_params):
+    base_url = get_url_for_source(request_source)
     url = '{}?{}'.format(base_url, urlencode(query_params))
     return url
 
 
-def get_magic_link(user, source):
+def get_magic_link(user, request_source):
 
     # check for existing key
     credential, created = MagicLinkCredential.objects.get_or_create(user=user, is_active=True)
@@ -50,12 +50,12 @@ def get_magic_link(user, source):
     payload = {
         'email': credential.user.email, 
         'token': token,
-        'source': source
+        'source': request_source
     }
 
-    # TODO: Error if source not specified
-    base_url = get_url_for_source(source)
-    url = '{}?{}'.format(base_url, payload)
+    # TODO: Error if request_source not specified
+    base_url = get_url_for_source(request_source)
+    url = '{}?{}'.format(base_url, urlencode(payload))
 
     return url
 

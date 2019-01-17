@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 def send_magic_link(
         user, 
-        source, 
+        request_source, 
         email_subject=api_settings.MAGIC_LINKS_EMAIL_SUBJECT,
         email_plaintext=api_settings.MAGIC_LINKS_EMAIL_PLAINTEXT_MESSAGE,
         email_html=api_settings.MAGIC_LINKS_EMAIL_HTML_TEMPLATE_NAME,
         **kwargs
     ):
 
-    link = get_magic_link(user=user, source=source)
+    link = get_magic_link(user=user, request_source=request_source)
 
     if link:
 
