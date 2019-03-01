@@ -1,10 +1,11 @@
 import bcrypt
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from rest_framework.authtoken.models import Token
 from magic_links.models import MagicLinkCredential
 from magic_links.settings import api_settings
+
 
 User = get_user_model()
 
@@ -83,26 +84,7 @@ def check_hashed_key(plain_text_key, hashed_key):
     return bcrypt.checkpw(plain_text_key.encode('utf-8'), hashed_key.encode('utf8'))
 
 
-def validate_credential(email, callback_token):
-    try:
-        credential = MagicLinkCredential.objects.get(user__email=email, is_active=True)
-
-        if check_credential_expiry(credential):
-            valid = check_hashed_key(str(credential.key), callback_token)
-            if valid:
-                credential.is_active = False
-                credential.save()
-                return credential
-            return None
-        else:
-            return None
-
-    except MagicLinkCredential.DoesNotExist:
-        return None
-
-
 def inject_template_context(context):
     for processor in api_settings.MAGIC_LINKS_CONTEXT_PROCESSORS:
         context.update(processor())
     return context
-

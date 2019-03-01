@@ -7,7 +7,7 @@ USER_SETTINGS = getattr(settings, 'MAGIC_LINKS', None)
 DEFAULTS = {
     # URLS for creating links, dict key corresponds to `source` when requesting link
     'MAGIC_LINKS_URLS': {
-        'default': 'myapp://login/'
+        'default': 'http://localhost:8000/auth/'
     },
 
     # Amount of time that tokens last, in seconds
@@ -20,7 +20,7 @@ DEFAULTS = {
     'MAGIC_LINKS_USER_EMAIL_FIELD_NAME': 'email',
 
     # The email the callback token is sent from
-    'MAGIC_LINKS_EMAIL_FROM_ADDRESS': 'test@jenie.com',
+    'MAGIC_LINKS_EMAIL_FROM_ADDRESS': 'from@example.com',
 
     # The email subject
     'MAGIC_LINKS_EMAIL_SUBJECT': "Your Magic Link",
@@ -29,7 +29,7 @@ DEFAULTS = {
     'MAGIC_LINKS_EMAIL_PLAINTEXT_MESSAGE': "Follow this link to sign in: {link}",
 
     # The email template name.
-    'MAGIC_LINKS_EMAIL_HTML_TEMPLATE_NAME': 'default_magic_link_email.html',
+    'MAGIC_LINKS_EMAIL_HTML_TEMPLATE_NAME': 'magic_link_email.html',
 
     # Context Processors for Email Template
     'MAGIC_LINKS_CONTEXT_PROCESSORS': [],

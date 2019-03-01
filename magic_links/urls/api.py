@@ -1,11 +1,11 @@
-from django.conf.urls import url
+from django.urls import path
 from magic_links.views.api import (
      RequestMagicLink,
-     AuthTokenFromMagicLinkToken,
+     AuthenticateToken,
 )
 
 
 urlpatterns = [
-     url('auth/email/', RequestMagicLink.as_view(), name='auth_email'),
-     url('auth/token/', AuthTokenFromMagicLinkToken.as_view(), name='auth_token'),
+     path('auth/email/', RequestMagicLink.as_view(), name='magic_link_email'),
+     path('auth/token/', AuthenticateToken.as_view(), name='magic_link_token'),
 ]
