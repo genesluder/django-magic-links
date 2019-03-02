@@ -31,13 +31,19 @@ def get_url_for_source(request_source):
     return api_settings.MAGIC_LINKS_URLS.get(request_source)
 
 
-def get_redirect_url(request_source, query_params):
-    base_url = get_url_for_source(request_source)
-    url = '{}?{}'.format(base_url, urlencode(query_params))
+def append_query_params(url, query_params):
+    separator = '?' if '?' not in url else '&'
+    url = '{}{}{}'.format(url, separator, urlencode(query_params))
     return url
 
 
-def get_magic_link(user, request_source):
+def get_redirect_url(request_source, query_params):
+    base_url = get_url_for_source(request_source)
+    url = append_query_params(base_url, query_params)
+    return url
+
+
+def get_magic_link(user, request_source, go_next=None):
 
     # check for existing key
     credential, created = MagicLinkCredential.objects.get_or_create(user=user, is_active=True)
@@ -51,8 +57,10 @@ def get_magic_link(user, request_source):
     payload = {
         'email': credential.user.email, 
         'token': token,
-        'source': request_source
+        'source': request_source,
     }
+    if go_next: 
+        payload['next'] = go_next
 
     # TODO: Error if request_source not specified
     base_url = get_url_for_source(request_source)

@@ -17,8 +17,16 @@ class MagicLinkFormView(FormView):
     template_name = 'magic_link_form.html'
     form_class = MagicLinkForm
 
+    def get_initial(self):
+        initial = super(MagicLinkFormView, self).get_initial()
+        initial['next'] = self.request.GET.get('next')
+        return initial
+
     def form_valid(self, form):
-        send_magic_link(form.cleaned_data['email'])
+        send_magic_link(
+            email=form.cleaned_data['email'], 
+            go_next=form.cleaned_data['next']
+        )
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -33,6 +41,7 @@ class AuthenticateView(TemplateView):
         email = request.GET.get('email')
         callback_token = request.GET.get('token')
         source = request.GET.get('source', 'default')
+        go_next = request.GET.get('next')
 
         if email and callback_token:
             user = None
@@ -47,7 +56,8 @@ class AuthenticateView(TemplateView):
 
             if user:
                 django_login(request, user)
-                return redirect(settings.LOGIN_REDIRECT_URL)
+                url = go_next or settings.LOGIN_REDIRECT_URL
+                return redirect(url)
 
         else:
             messages.error(request, MESSAGE_UNKNOWN_ERROR)

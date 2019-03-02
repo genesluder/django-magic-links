@@ -26,13 +26,14 @@ logger = logging.getLogger(__name__)
 def email_link(
         user, 
         request_source, 
+        go_next=None,
         email_subject=api_settings.MAGIC_LINKS_EMAIL_SUBJECT,
         email_plaintext=api_settings.MAGIC_LINKS_EMAIL_PLAINTEXT_MESSAGE,
         email_html=api_settings.MAGIC_LINKS_EMAIL_HTML_TEMPLATE_NAME,
         **kwargs
     ):
 
-    link = get_magic_link(user=user, request_source=request_source)
+    link = get_magic_link(user=user, request_source=request_source, go_next=go_next)
 
     if link:
 
@@ -64,7 +65,7 @@ def email_link(
     return logger.debug("Could not generate link.")
 
 
-def send_magic_link(email, request_source='default'):
+def send_magic_link(email, request_source='default', go_next=None):
 
     user = get_user_for_email(email)
 
@@ -74,7 +75,7 @@ def send_magic_link(email, request_source='default'):
     if not user.is_active:
         raise UserInactiveException
 
-    success = email_link(user, request_source)
+    success = email_link(user, request_source, go_next=go_next)
 
     if not success:
         raise MagicLinkException
