@@ -3,7 +3,8 @@ from rest_framework import serializers
 
 class MagicLinkEmailSerializer(serializers.Serializer):
     email 	= serializers.EmailField()
-    source 	= serializers.CharField()
+    source 	= serializers.CharField(default='default')
+    next 	= serializers.CharField(required=False)
 
 
 class MagicLinkTokenSerializer(serializers.Serializer):

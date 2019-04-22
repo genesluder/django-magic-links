@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login as django_login
 from django.shortcuts import redirect, reverse
@@ -6,6 +5,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from magic_links.forms import MagicLinkForm
 from magic_links.constants import MESSAGE_UNKNOWN_ERROR
+from magic_links.settings import api_settings
 from magic_links.services import (
     authenticate_session,
     send_magic_link,
@@ -25,7 +25,7 @@ class MagicLinkFormView(FormView):
     def form_valid(self, form):
         send_magic_link(
             email=form.cleaned_data['email'], 
-            go_next=form.cleaned_data['next']
+            go_next=form.cleaned_data.get('next')
         )
         return super().form_valid(form)
 
@@ -56,7 +56,7 @@ class AuthenticateView(TemplateView):
 
             if user:
                 django_login(request, user)
-                url = go_next or settings.LOGIN_REDIRECT_URL
+                url = go_next or api_settings.MAGIC_LINKS_LOGIN_REDIRECT
                 return redirect(url)
 
         else:

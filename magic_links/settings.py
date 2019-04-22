@@ -33,6 +33,11 @@ DEFAULTS = {
 
     # Context Processors for Email Template
     'MAGIC_LINKS_CONTEXT_PROCESSORS': [],
+
+
+    # Context Processors for Email Template
+    'MAGIC_LINKS_LOGIN_REDIRECT': settings.LOGIN_REDIRECT_URL,
+
 }
 
 # List of settings that may be in string import notation.

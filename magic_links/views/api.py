@@ -23,10 +23,10 @@ class RequestMagicLink(APIView):
         serializer = self.serializer_class(data=request.data, context={'request': request})
 
         if serializer.is_valid():
-
             try:                
                 send_magic_link(
                     email=serializer.validated_data['email'],
+                    go_next=serializer.validated_data.get('next'),
                     request_source=serializer.validated_data.get('source')
                 )
             except Exception as e:
