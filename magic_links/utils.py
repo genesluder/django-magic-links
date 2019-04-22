@@ -70,17 +70,17 @@ def get_magic_link(user, request_source, go_next=None):
 
 
 def get_user_for_email(email):
-    if api_settings.MAGIC_LINKS_CREATE_USER is True:
-        user, created = User.objects.get_or_create(email=email)
-        if created:
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        if api_settings.MAGIC_LINKS_CREATE_USER is True:
+            user = User.objects.create_user(email=email)
             # Initially set an unusable password
             user.set_unusable_password()
             user.save()
-    else:
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
+        else:
             user = None
+
     return user
 
 
