@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.parsers import JSONParser, FormParser
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from magic_links.constants import MESSAGE_MAGIC_LINKS_SENT
@@ -15,6 +16,7 @@ from magic_links.services import (
 
 class RequestMagicLink(APIView):
 
+    parser_classes = (JSONParser, FormParser,)
     permission_classes = (AllowAny,)
     serializer_class = MagicLinkEmailSerializer
     
@@ -40,6 +42,7 @@ class RequestMagicLink(APIView):
 
 class AuthenticateToken(APIView):
     
+    parser_classes = (JSONParser, FormParser,)
     permission_classes = (AllowAny,)
     serializer_class = MagicLinkTokenSerializer
 
